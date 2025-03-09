@@ -4,11 +4,10 @@ export type TProduct = {
   price: number;
   category:
     | 'Writing'
-    | 'Office'
-    | 'Supplies'
+    | 'Office Supplies'
     | 'Art Supplies'
     | 'Educational'
-    | ' Technology';
+    | 'Technology';
   description: string;
   quantity: number;
   inStock: boolean;
