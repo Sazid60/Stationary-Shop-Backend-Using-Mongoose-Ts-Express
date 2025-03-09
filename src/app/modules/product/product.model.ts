@@ -20,8 +20,7 @@ const productSchema = new Schema<TProduct>(
       type: String,
       enum: [
         'Writing',
-        'Office',
-        'Supplies',
+        'Office Supplies',
         'Art Supplies',
         'Educational',
         ' Technology',
