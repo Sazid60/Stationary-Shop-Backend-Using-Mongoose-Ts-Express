@@ -22,6 +22,25 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
+const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const result = await ProductService.getAllStudentsFromDB();
+    res.status(200).json({
+      message: 'Product Retrieved Successfully',
+      success: true,
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || 'No Product Is Found',
+      success: false,
+      error: err.errors,
+      stack: err.stack,
+    });
+  }
+};
+
 export const ProductController = {
   createProduct,
+  getAllProducts,
 };
