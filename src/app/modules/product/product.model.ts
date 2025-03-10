@@ -41,9 +41,27 @@ const productSchema = new Schema<TProduct, ProductModel>(
       type: Boolean,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true, versionKey: false },
 );
+
+productSchema.pre('find', function (next) {
+  // console.log(this);
+  this.find({ isDeleted: { $ne: true } }); // this is chaining with find query
+  // this is filtering data and then the actual find method is working with the filtered data
+  next();
+});
+
+productSchema.pre('findOne', function (next) {
+  // console.log(this);
+  this.find({ isDeleted: { $ne: true } }); // this is chaining with find query
+  // this is filtering data and then the actual find method is working with the filtered data
+  next();
+});
 
 productSchema.statics.isProductExist = async function (name: string) {
   const existingProduct = await Product.findOne({ name });
