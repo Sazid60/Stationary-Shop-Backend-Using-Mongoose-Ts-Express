@@ -28,6 +28,26 @@ const createAnOrderInDB = async (orderData: TOrder) => {
   }
   return result;
 };
-export const OrderServices = {
+
+// get a;ll orders
+const getAllOrders = async () => {
+  const orders = await Product.find();
+  return orders;
+};
+//  get revenue from db function
+const getRevenueFromDB = async () => {
+  // this is the logic for going through all the documents and grabbing the price to calculate revenue
+  const result = await Order.aggregate([
+    {
+      $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } },
+    },
+    { $project: { _id: 0, totalRevenue: 1 } },
+  ]);
+  return result;
+};
+
+export const OrderService = {
   createAnOrderInDB,
+  getRevenueFromDB,
+  getAllOrders,
 };
