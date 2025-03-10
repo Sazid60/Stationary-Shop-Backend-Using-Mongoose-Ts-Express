@@ -1,11 +1,12 @@
 import { model, Schema } from 'mongoose';
-import { TProduct } from './product.interface';
+import { ProductModel, TProduct } from './product.interface';
 
-const productSchema = new Schema<TProduct>(
+const productSchema = new Schema<TProduct, ProductModel>(
   {
     name: {
       type: String,
       required: [true, 'Name Is Required'],
+      unique: true,
     },
     brand: {
       type: String,
@@ -44,4 +45,9 @@ const productSchema = new Schema<TProduct>(
   { timestamps: true, versionKey: false },
 );
 
-export const ProductModel = model<TProduct>('Product', productSchema);
+productSchema.statics.isProductExist = async function (name: string) {
+  const existingProduct = await Product.findOne({ name });
+  return existingProduct;
+};
+
+export const Product = model<TProduct, ProductModel>('Product', productSchema);

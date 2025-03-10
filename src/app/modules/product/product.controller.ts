@@ -24,25 +24,46 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductService.getAllStudentsFromDB();
-    res.status(200).json({
-      message: 'Product Retrieved Successfully',
-      success: true,
-      data: result,
-    });
+    const { searchTerm } = req.query;
+
+    let result;
+    if (searchTerm) {
+      // Calling Service Function To get searched data
+      result = await ProductService.getAllSearchedProductsFromDB(
+        searchTerm as string,
+      );
+    } else {
+      // Calling Service Function To Get All Products Data
+      result = await ProductService.getAllProductsFromDB();
+    }
+
+    if (result.length === 0) {
+      res.status(404).json({
+        message: 'No products found',
+        status: true,
+        data: [],
+      });
+    } else {
+      res.status(200).json({
+        message: 'Product Retrieved successfully',
+        status: true,
+        data: result,
+      });
+    }
   } catch (err: any) {
     res.status(500).json({
-      message: err.message || 'No Product Is Found',
-      success: false,
+      message: err.message || 'Something Went Wrong !',
+      status: false,
       error: err.errors,
       stack: err.stack,
     });
   }
 };
+
 const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const result = await ProductService.getSingleStudentFromDB(productId);
+    const result = await ProductService.getSingleProductFromDB(productId);
     res.status(200).json({
       message: 'Product Retrieved Successfully',
       success: true,
