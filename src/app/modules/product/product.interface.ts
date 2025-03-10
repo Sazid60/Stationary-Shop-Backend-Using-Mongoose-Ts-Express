@@ -13,6 +13,7 @@ export type TProduct = {
   description: string;
   quantity: number;
   inStock: boolean;
+  isDeleted: boolean;
 };
 
 export interface ProductModel extends Model<TProduct> {

@@ -4,11 +4,11 @@ import { TProduct } from './product.interface';
 import { Product } from './product.model';
 
 const createProductInDB = async (productData: TProduct) => {
-  const result = await Product.create(productData);
-
   if (await Product.isProductExist(productData.name)) {
     throw new Error('Product Already Exist');
   }
+  const result = await Product.create(productData);
+
   return result;
 };
 
@@ -31,7 +31,7 @@ const getAllSearchedProductsFromDB = async (searchTerm: string) => {
 
 //  get single product
 const getSingleProductFromDB = async (productId: string) => {
-  const result = await Product.findById(productId);
+  const result = await Product.findById({ _id: productId });
   return result;
 };
 
@@ -46,10 +46,25 @@ const updateAProductInDB = async (
   });
   return result;
 };
+
+//  delete a product
+const deleteAProductFromDB = async (productId: string) => {
+  const result = Product.findByIdAndUpdate(
+    { _id: productId },
+    { isDeleted: true },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+  return result;
+};
+
 export const ProductService = {
   createProductInDB,
   getAllProductsFromDB,
   getSingleProductFromDB,
   updateAProductInDB,
   getAllSearchedProductsFromDB,
+  deleteAProductFromDB,
 };
