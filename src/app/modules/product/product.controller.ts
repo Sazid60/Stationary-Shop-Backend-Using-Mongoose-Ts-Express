@@ -39,8 +39,27 @@ const getAllProducts = async (req: Request, res: Response) => {
     });
   }
 };
+const getSingleProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const result = await ProductService.getSingleStudentFromDB(productId);
+    res.status(200).json({
+      message: 'Product Retrieved Successfully',
+      success: true,
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || 'No Product Is Found',
+      success: false,
+      error: err.errors,
+      stack: err.stack,
+    });
+  }
+};
 
 export const ProductController = {
   createProduct,
   getAllProducts,
+  getSingleProduct,
 };
