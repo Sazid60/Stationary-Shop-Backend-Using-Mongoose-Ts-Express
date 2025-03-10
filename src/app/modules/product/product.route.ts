@@ -10,4 +10,7 @@ router.get('/products', ProductController.getAllProducts);
 
 // get single product
 router.get('/products/:productId', ProductController.getSingleProduct);
+// update single product
+router.put('/products/:productId', ProductController.updateProduct);
+
 export const ProductRoutes = router;

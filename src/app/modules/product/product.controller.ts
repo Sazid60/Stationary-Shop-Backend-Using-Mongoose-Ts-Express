@@ -58,8 +58,34 @@ const getSingleProduct = async (req: Request, res: Response) => {
   }
 };
 
+const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const updatedProductData = req.body;
+    const { productId } = req.params;
+
+    const result = await ProductService.updateAProductInDB(
+      productId,
+      updatedProductData,
+    );
+
+    res.status(200).json({
+      message: 'Product updated successfully',
+      success: true,
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || 'Validation Failed',
+      success: false,
+      error: err.errors,
+      stack: err.stack,
+    });
+  }
+};
+
 export const ProductController = {
   createProduct,
   getAllProducts,
   getSingleProduct,
+  updateProduct,
 };
