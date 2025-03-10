@@ -1,20 +1,37 @@
 // Create Product
 
 import { TProduct } from './product.interface';
-import { ProductModel } from './product.model';
+import { Product } from './product.model';
 
 const createProductInDB = async (productData: TProduct) => {
-  const result = await ProductModel.create(productData);
+  const result = await Product.create(productData);
+
+  if (await Product.isProductExist(productData.name)) {
+    throw new Error('Product Already Exist');
+  }
   return result;
 };
 
-const getAllStudentsFromDB = async () => {
-  const result = await ProductModel.find();
+const getAllProductsFromDB = async () => {
+  const result = await Product.find();
   return result;
 };
+
+const getAllSearchedProductsFromDB = async (searchTerm: string) => {
+  // used regex is used here to match partially with the data
+  const result = await Product.find({
+    $or: [
+      { name: { $regex: searchTerm, $options: 'i' } },
+      { brand: { $regex: searchTerm, $options: 'i' } },
+      { type: { $regex: searchTerm, $options: 'i' } },
+    ],
+  });
+  return result;
+};
+
 //  get single product
-const getSingleStudentFromDB = async (productId: string) => {
-  const result = await ProductModel.findById(productId);
+const getSingleProductFromDB = async (productId: string) => {
+  const result = await Product.findById(productId);
   return result;
 };
 
@@ -23,7 +40,7 @@ const updateAProductInDB = async (
   productId: string,
   updates: Partial<TProduct>,
 ) => {
-  const result = await ProductModel.findByIdAndUpdate(productId, updates, {
+  const result = await Product.findByIdAndUpdate(productId, updates, {
     new: true,
     runValidators: true,
   });
@@ -31,7 +48,8 @@ const updateAProductInDB = async (
 };
 export const ProductService = {
   createProductInDB,
-  getAllStudentsFromDB,
-  getSingleStudentFromDB,
+  getAllProductsFromDB,
+  getSingleProductFromDB,
   updateAProductInDB,
+  getAllSearchedProductsFromDB,
 };
